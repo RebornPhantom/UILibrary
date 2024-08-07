@@ -1,0 +1,44 @@
+local UILibrary = {}
+
+function UILibrary:CreateScreenGui(parent, name)
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = name or "ScreenGui"
+    screenGui.Parent = parent
+    return screenGui
+end
+
+function UILibrary:CreateFrame(parent, size, position, backgroundColor)
+    local frame = Instance.new("Frame")
+    frame.Size = size or UDim2.new(0, 300, 0, 250)
+    frame.Position = position or UDim2.new(0.5, -150, 0.5, -125)
+    frame.BackgroundColor3 = backgroundColor or Color3.fromRGB(40, 40, 40)
+    frame.BorderSizePixel = 0
+    frame.Parent = parent
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = frame
+    
+    return frame
+end
+
+function UILibrary:CreateTextButton(parent, size, position, text, backgroundColor)
+    local button = Instance.new("TextButton")
+    button.Size = size or UDim2.new(0.8, 0, 0, 40)
+    button.Position = position or UDim2.new(0.1, 0, 0.5, 0)
+    button.BackgroundColor3 = backgroundColor or Color3.fromRGB(60, 60, 60)
+    button.BorderSizePixel = 0
+    button.Text = text or "Button"
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.Gotham
+    button.TextSize = 18
+    button.Parent = parent
+    
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 10)
+    buttonCorner.Parent = button
+    
+    return button
+end
+
+return UILibrary
