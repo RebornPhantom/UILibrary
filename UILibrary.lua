@@ -1,4 +1,3 @@
--- UILibrary.lua
 local UILibrary = {}
 
 local UIS = game:GetService("UserInputService")
