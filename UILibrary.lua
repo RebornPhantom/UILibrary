@@ -20,7 +20,19 @@ function UILibrary:CreateFrame(parent, size, position, backgroundColor)
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = frame
-    
+
+    local shadow = Instance.new("ImageLabel")
+    shadow.AnchorPoint = Vector2.new(0.5, 0.5)
+    shadow.Position = UDim2.new(0.5, 0, 0.5, 6)
+    shadow.Size = UDim2.new(1, 18, 1, 18)
+    shadow.Image = "rbxassetid://1316045217"
+    shadow.ImageTransparency = 0.5
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(10, 10, 118, 118)
+    shadow.BackgroundTransparency = 1
+    shadow.ZIndex = 0
+    shadow.Parent = frame
+
     return frame
 end
 
@@ -109,6 +121,42 @@ function UILibrary:CreateButton(sector, name, text, callback)
     local button = self:CreateTextButton(sector, UDim2.new(0.8, 0, 0, 40), UDim2.new(0.1, 0, 0.5, 0), text or "Button", Color3.fromRGB(60, 60, 60))
     button.Name = name
     button.MouseButton1Click:Connect(callback)
+    return button
+end
+
+function UILibrary:CreateKeybindButton(sector, name, text, initialKey, callback)
+    local button = self:CreateTextButton(sector, UDim2.new(0.8, 0, 0, 40), UDim2.new(0.1, 0, 0.5, 0), text or "Set Keybind", Color3.fromRGB(60, 60, 60))
+    button.Name = name
+
+    local keybind = initialKey or Enum.KeyCode.Unknown
+    local listening = false
+
+    local function updateButtonText()
+        button.Text = keybind ~= Enum.KeyCode.Unknown and "Keybind: " .. keybind.Name or "Set Keybind"
+    end
+
+    updateButtonText()
+
+    button.MouseButton1Click:Connect(function()
+        button.Text = "Press any key..."
+        listening = true
+    end)
+
+    UIS.InputBegan:Connect(function(input)
+        if listening and input.UserInputType == Enum.UserInputType.Keyboard then
+            keybind = input.KeyCode
+            listening = false
+            updateButtonText()
+            callback(keybind)
+        end
+    end)
+
+    UIS.InputBegan:Connect(function(input)
+        if input.KeyCode == keybind then
+            callback(keybind)
+        end
+    end)
+
     return button
 end
 
