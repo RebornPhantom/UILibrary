@@ -1,9 +1,12 @@
+-- UILibrary.lua
 local UILibrary = {}
 
-function UILibrary:CreateScreenGui(parent, name)
+local UIS = game:GetService("UserInputService")
+
+function UILibrary:CreateScreenGui(name)
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = name or "ScreenGui"
-    screenGui.Parent = parent
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     return screenGui
 end
 
@@ -60,8 +63,8 @@ function UILibrary:CreateTextButton(parent, size, position, text, backgroundColo
     return button
 end
 
-function UILibrary:CreateBody(parent)
-    local screenGui = self:CreateScreenGui(parent, "ControlGui")
+function UILibrary:CreateBody(name)
+    local screenGui = self:CreateScreenGui(name or "ControlGui")
     local frame = self:CreateFrame(screenGui, UDim2.new(0, 300, 0, 250), UDim2.new(1, -320, 0, 10), Color3.fromRGB(40, 40, 40))
     frame.AnchorPoint = Vector2.new(1, 0)
     frame.Active = true
@@ -83,7 +86,12 @@ function UILibrary:CreateBody(parent)
     collapseButton.Font = Enum.Font.GothamBold
     collapseButton.TextSize = 24
 
-    return screenGui, frame, collapseButton
+    collapseButton.MouseButton1Click:Connect(function()
+        frame.Visible = not frame.Visible
+        collapseButton.Text = frame.Visible and "-" or "+"
+    end)
+
+    return screenGui, frame
 end
 
 function UILibrary:CreateSector(parent, name)
@@ -96,6 +104,13 @@ function UILibrary:CreateSector(parent, name)
     sectorTitle.TextSize = 20
 
     return sector
+end
+
+function UILibrary:CreateButton(sector, name, text, callback)
+    local button = self:CreateTextButton(sector, UDim2.new(0.8, 0, 0, 40), UDim2.new(0.1, 0, 0.5, 0), text or "Button", Color3.fromRGB(60, 60, 60))
+    button.Name = name
+    button.MouseButton1Click:Connect(callback)
+    return button
 end
 
 return UILibrary
